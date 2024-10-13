@@ -1,0 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class playerlightscript : MonoBehaviour
+{
+
+    Light m_Light;
+    public bool drainOverTime;
+    public float maxBrightness;
+    public float minBrightness;
+    public float drainRate;
+
+    void Start()
+    {
+        m_Light = GetComponent<Light>();
+    }
+
+    void Update()
+    {
+        if(drainOverTime == true && m_Light.enabled == true)
+        {
+            m_Light.intensity = Mathf.Clamp(m_Light.intensity,minBrightness,maxBrightness);
+            if (m_Light.intensity > minBrightness)
+            {
+                m_Light.intensity -= Time.deltaTime *(drainRate/1000);
+            }
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            m_Light.enabled = !m_Light.enabled;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReplaceBattery(.3f);
+        }
+    }   
+
+    public void ReplaceBattery(float amount)
+    {
+        m_Light.intensity += amount;
+    } 
+
+}
