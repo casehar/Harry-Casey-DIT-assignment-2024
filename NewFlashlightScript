@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class NewFlashlightScript : MonoBehaviour
+{
+    Light m_Light;
+    public bool drainOverTime;
+    public float maxBrightness;
+    public float minBrightness;
+    public float drainRate;
+    public float rechargeRate = 0.05f; // Rate of recharge per frame
+
+    private Coroutine rechargeCoroutine;
+
+    void Start()
+    {
+        m_Light = GetComponent<Light>();
+    }
+
+    void Update()
+    {
+        if(drainOverTime && m_Light.enabled)
+        {
+            m_Light.intensity = Mathf.Clamp(m_Light.intensity, minBrightness, maxBrightness);
+            if (m_Light.intensity > minBrightness)
+            {
+                m_Light.intensity -= Time.deltaTime * (drainRate / 1000);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            m_Light.enabled = !m_Light.enabled;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReplaceBattery(0.3f);
+        }
+
+        // Start recharging flashlight while "F" is held down
+        if (Input.GetKey(KeyCode.F))
+        {
+            if (rechargeCoroutine == null) // Start coroutine if it's not already running
+            {
+                rechargeCoroutine = StartCoroutine(RechargeFlashlight());
+            }
+        }
+        else if (rechargeCoroutine != null)
+        {
+            StopCoroutine(rechargeCoroutine);
+            rechargeCoroutine = null;
+        }
+    }   
+
+    public void ReplaceBattery(float amount)
+    {
+        m_Light.intensity += amount;
+    } 
+
+    private IEnumerator RechargeFlashlight()
+    {
+        while (m_Light.intensity < maxBrightness)
+        {
+            m_Light.intensity += rechargeRate;
+            yield return null; // Wait a frame before next increase
+        }
+    }
+}
