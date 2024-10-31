@@ -5,10 +5,10 @@ using UnityEngine;
 public class NewFlashlightScript : MonoBehaviour
 {
     Light m_Light;
-    public bool drainOverTime;
-    public float maxBrightness;
-    public float minBrightness;
-    public float drainRate;
+    public bool drainOverTime; //controls drain over time
+    public float maxBrightness; //max brightness of torch light
+    public float minBrightness; //min brightness of torch liught
+    public float drainRate; //rate at which light drains
     public float rechargeRate = 0.05f; // Rate of recharge per frame
 
     private Coroutine rechargeCoroutine;
@@ -25,16 +25,16 @@ public class NewFlashlightScript : MonoBehaviour
             m_Light.intensity = Mathf.Clamp(m_Light.intensity, minBrightness, maxBrightness);
             if (m_Light.intensity > minBrightness)
             {
-                m_Light.intensity -= Time.deltaTime * (drainRate / 1000);
+                m_Light.intensity -= Time.deltaTime * (drainRate / 1000); //sets torch to drain over time according to value of variable
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) //takes imput from left mouse button to enable light
         {
             m_Light.enabled = !m_Light.enabled;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R)) //takes input from "r" key to increase brightness
         {
             ReplaceBattery(0.3f);
         }
@@ -56,12 +56,12 @@ public class NewFlashlightScript : MonoBehaviour
 
     public void ReplaceBattery(float amount)
     {
-        m_Light.intensity += amount;
+        m_Light.intensity += amount; //adds to intensity of light
     } 
 
-    private IEnumerator RechargeFlashlight()
+    private IEnumerator RechargeFlashlight() 
     {
-        while (m_Light.intensity < maxBrightness)
+        while (m_Light.intensity < maxBrightness) //loops to increase value of brightness as long as "r" key is held down
         {
             m_Light.intensity += rechargeRate;
             yield return null; // Wait a frame before next increase
