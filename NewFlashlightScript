@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//new flashlight script, new script has new function using continual button press to increase light, script also handles all other flashlight functions.
 public class NewFlashlightScript : MonoBehaviour
 {
     Light m_Light;
